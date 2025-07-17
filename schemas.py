@@ -1,12 +1,14 @@
-# schemas.py (수정 완료)
+# schemas.py 수정 제안
 
 from pydantic import BaseModel, HttpUrl
+from typing import Optional # Optional 임포트
 
 class AvatarCreateRequest(BaseModel):
+    userId: str
     tryOnImgUrl: HttpUrl
-    userId: int
-    taskId: str
-    callbackUrl: HttpUrl
+    # [수정] 아래 두 필드를 선택적으로 변경
+    taskId: Optional[str] = None
+    callbackUrl: Optional[HttpUrl] = None
 
 class AvatarTryOnRequest(BaseModel):
     baseImgUrl: HttpUrl
@@ -14,12 +16,13 @@ class AvatarTryOnRequest(BaseModel):
     maskImgUrl: HttpUrl
     poseImgUrl: HttpUrl
     userId: int
-    # [수정] 아래 두 필드 추가
     productId: int
     garmentType: str
-    taskId: str
-    callbackUrl: HttpUrl
+    # [수정] 아래 두 필드를 선택적으로 변경
+    taskId: Optional[str] = None
+    callbackUrl: Optional[HttpUrl] = None
 
+# TaskResponse 스키마는 그대로 유지
 class TaskResponse(BaseModel):
     task_id: str
     status: str
