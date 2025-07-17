@@ -1,0 +1,41 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  # --- 1. FastAPI 애플리케이션 서버 ---
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    # 호스트의 8000번 포트를 컨테이너의 8000번 포트로 연결
+    ports:
+      - "8000:8000"
+    # .env 파일에 정의된 환경 변수를 컨테이너로 전달
+    env_file:
+      - .env
+    # docker-compose 내부 네트워크를 통해 'redis'라는 이름으로 접속하도록 설정
+    environment:
+      - REDIS_HOST=redis
+    # redis 서비스가 시작된 후에 api 서비스를 시작
+    depends_on:
+      - redis
+
+  # --- 2. Redis 메시지 브로커 ---
+  redis:
+    image: "redis:7-alpine"
+    # 외부의 GPU 워커가 접속할 수 있도록 호스트의 6379 포트를 외부에 개방
+    ports:
+      - "6379:6379"
+
+  # --- 3. Flower (Celery 모니터링 대시보드) ---
+  flower:
+    image: mher/flower:2.0
+    # Celery 5.x 버전과 호환되는 flower 2.0 버전을 사용
+    ports:
+      - "5555:5555"
+    # .env 파일과 동일한 Redis 정보를 사용하여 Celery 브로커에 연결
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis

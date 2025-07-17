@@ -1,0 +1,11 @@
+# Web Framework & Comms
+fastapi
+uvicorn[standard]
+celery
+redis
+
+# AWS & Configuration
+boto3
+pydantic-settings
+
+flower
