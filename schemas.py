@@ -1,5 +1,3 @@
-# schemas.py 수정 제안
-
 from pydantic import BaseModel, HttpUrl
 from typing import Optional # Optional 임포트
 
@@ -18,6 +16,7 @@ class AvatarTryOnRequest(BaseModel):
     userId: int
     productId: int
     garmentType: str
+    cacheKey: str
     # [수정] 아래 두 필드를 선택적으로 변경
     taskId: Optional[str] = None
     callbackUrl: Optional[HttpUrl] = None
